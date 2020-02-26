@@ -18,6 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+if(WIN32)
+    set(ABSL_WINDOWS absl::abseil_dll)
+endif()
+
 add_geode_library(
     NAME basic
     FOLDER "geode/basic"
@@ -52,6 +56,7 @@ add_geode_library(
     PUBLIC_DEPENDENCIES
         absl::flat_hash_map
         absl::strings
+		${ABSL_WINDOWS}
         ghcFilesystem::ghc_filesystem
         Bitsery::bitsery
     PRIVATE_DEPENDENCIES
