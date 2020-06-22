@@ -22,8 +22,8 @@ set(ABSEIL_PATH ${PROJECT_BINARY_DIR}/third_party/abseil)
 set(ABSEIL_INSTALL_PREFIX ${ABSEIL_PATH}/install)
 ExternalProject_Add(abseil
     PREFIX ${ABSEIL_PATH}
-    GIT_REPOSITORY https://github.com/abseil/abseil-cpp
-    GIT_TAG ccdbb5941f992fabda7eae3ce72f55efc17c826a
+    GIT_REPOSITORY https://github.com/Geode-solutions/abseil-cpp
+    GIT_TAG 7fa1be535f9e2cfe6026b1db67f9092b441b3673
     GIT_PROGRESS ON
     CMAKE_GENERATOR ${CMAKE_GENERATOR}
     CMAKE_GENERATOR_PLATFORM ${CMAKE_GENERATOR_PLATFORM}
