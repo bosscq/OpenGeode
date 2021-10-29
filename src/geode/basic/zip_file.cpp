@@ -50,10 +50,8 @@ namespace geode
                 writer_, MZ_COMPRESS_METHOD_STORE );
             const auto status = mz_zip_writer_open_file(
                 writer_, to_string( file ).c_str(), 0, 0 );
-            if( status != MZ_OK )
-            {
-                Logger::error( "Error opening zip for writing" );
-            }
+            OPENGEODE_EXCEPTION(
+                status == MZ_OK, "[ZipFile] Error opening zip for writing" );
         }
 
         ~Impl()
@@ -62,7 +60,7 @@ namespace geode
             const auto status = mz_zip_writer_close( writer_ );
             if( status != MZ_OK )
             {
-                Logger::error( "Error closing zip for writing" );
+                Logger::error( "[ZipFile] Error closing zip for writing" );
             }
             mz_zip_writer_delete( &writer_ );
         }
@@ -131,10 +129,8 @@ namespace geode
             mz_zip_reader_create( &reader_ );
             const auto status =
                 mz_zip_reader_open_file( reader_, to_string( file ).c_str() );
-            if( status != MZ_OK )
-            {
-                Logger::error( "Error opening zip for reading" );
-            }
+            OPENGEODE_EXCEPTION(
+                status == MZ_OK, "[UnzipFile] Error opening zip for reading" );
         }
 
         ~Impl()

@@ -21,36 +21,9 @@
  *
  */
 
-#pragma once
+#include <geode/basic/factory.h>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-#include <absl/strings/string_view.h>
-
-namespace geode
-{
-    static constexpr double global_epsilon{ 1E-8 };
-    static constexpr double global_epsilon2{ global_epsilon * global_epsilon };
-    static constexpr double global_epsilon3{ global_epsilon2 * global_epsilon };
-
-    using index_t = unsigned int;
-    using signed_index_t = int;
-    using local_index_t = unsigned char;
-
-    /// Value used for a invalid index
-    static constexpr index_t NO_ID = index_t( -1 );
-    static constexpr local_index_t NO_LID = local_index_t( -1 );
-
-    inline constexpr unsigned char operator"" _uc(
-        unsigned long long arg ) noexcept
-    {
-        return static_cast< unsigned char >( arg );
-    }
-
-    inline std::string to_string( absl::string_view view )
-    {
-        return static_cast< std::string >( view );
-    }
-} // namespace geode
+#define PYTHON_FACTORY_CLASS( type )                                           \
+    pybind11::class_< type >( module, #type )                                  \
+        .def( "list_creators", &type::list_creators )                          \
+        .def( "has_creator", &type::has_creator )
