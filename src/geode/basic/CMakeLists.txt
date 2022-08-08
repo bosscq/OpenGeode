@@ -78,7 +78,7 @@ add_geode_library(
         MINIZIP::minizip-ng
 )
 if(WIN32)
-    set_target_properties(basic
+    set_target_properties(${PROJECT_NAME}_basic
         PROPERTIES
             LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRTD"
     )

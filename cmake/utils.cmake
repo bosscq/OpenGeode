@@ -124,12 +124,12 @@ if(DOXYGEN_FOUND AND EXISTS ${PROJECT_SOURCE_DIR}/cmake/Doxyfile.in)
 endif()
 
 function(_export_library library_name)
-    export(TARGETS ${library_name}
+    export(TARGETS ${PROJECT_NAME}_${library_name}
         NAMESPACE ${PROJECT_NAME}::
         FILE ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/${PROJECT_NAME}_${library_name}_target.cmake
     )
-    install(TARGETS ${library_name}
-        EXPORT ${library_name}
+    install(TARGETS ${PROJECT_NAME}_${library_name}
+        EXPORT ${PROJECT_NAME}_${library_name}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT public
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -137,7 +137,7 @@ function(_export_library library_name)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         COMPONENT public
     )
-    install(EXPORT ${library_name}
+    install(EXPORT ${PROJECT_NAME}_${library_name}
         FILE ${PROJECT_NAME}_${library_name}_target.cmake
         NAMESPACE ${PROJECT_NAME}::
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
@@ -172,25 +172,26 @@ function(add_geode_library)
             "${PROJECT_SOURCE_DIR}/include/${GEODE_LIB_FOLDER}/${file}"
         )
     endforeach()
+    set(GEODE_LIB_NEW_NAME ${PROJECT_NAME}_${GEODE_LIB_NAME})
     if(${GEODE_LIB_STATIC})
-        add_library(${GEODE_LIB_NAME} STATIC  
+        add_library(${GEODE_LIB_NEW_NAME} STATIC  
             "${ABSOLUTE_GEODE_LIB_SOURCES}"
             "${ABSOLUTE_GEODE_LIB_PUBLIC_HEADERS}"
             "${ABSOLUTE_GEODE_LIB_ADVANCED_HEADERS}"
             "${ABSOLUTE_GEODE_LIB_PRIVATE_HEADERS}"
         )
     else()
-        add_library(${GEODE_LIB_NAME} SHARED  
+        add_library(${GEODE_LIB_NEW_NAME} SHARED  
             "${ABSOLUTE_GEODE_LIB_SOURCES}"
             "${ABSOLUTE_GEODE_LIB_PUBLIC_HEADERS}"
             "${ABSOLUTE_GEODE_LIB_ADVANCED_HEADERS}"
             "${ABSOLUTE_GEODE_LIB_PRIVATE_HEADERS}"
         )
     endif()
-    add_library(${PROJECT_NAME}::${GEODE_LIB_NAME} ALIAS ${GEODE_LIB_NAME})
+    add_library(${PROJECT_NAME}::${GEODE_LIB_NAME} ALIAS ${GEODE_LIB_NEW_NAME})
     string(TOLOWER ${PROJECT_NAME} project-name)
     string(REGEX REPLACE "-" "_" project_name ${project-name})
-    set_target_properties(${GEODE_LIB_NAME}
+    set_target_properties(${GEODE_LIB_NEW_NAME}
         PROPERTIES
             POSITION_INDEPENDENT_CODE ON
             OUTPUT_NAME ${PROJECT_NAME}_${GEODE_LIB_NAME}
@@ -201,18 +202,18 @@ function(add_geode_library)
     source_group("Advanced Header Files" FILES "${ABSOLUTE_GEODE_LIB_ADVANCED_HEADERS}")
     source_group("Private Header Files" FILES "${ABSOLUTE_GEODE_LIB_PRIVATE_HEADERS}")
     source_group("Source Files" FILES "${ABSOLUTE_GEODE_LIB_SOURCES}")
-    target_include_directories(${GEODE_LIB_NAME}
+    target_include_directories(${GEODE_LIB_NEW_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
             $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
-    target_link_libraries(${GEODE_LIB_NAME}
+    target_link_libraries(${GEODE_LIB_NEW_NAME}
         PUBLIC ${GEODE_LIB_PUBLIC_DEPENDENCIES}
         PRIVATE ${GEODE_LIB_PRIVATE_DEPENDENCIES}
     )
     _export_library(${GEODE_LIB_NAME})
-    generate_export_header(${GEODE_LIB_NAME}
+    generate_export_header(${GEODE_LIB_NEW_NAME}
         BASE_NAME ${project_name}_${GEODE_LIB_NAME}
         EXPORT_MACRO_NAME ${project_name}_${GEODE_LIB_NAME}_api
         EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/${GEODE_LIB_FOLDER}/${project_name}_${GEODE_LIB_NAME}_export.h
@@ -339,16 +340,17 @@ function(add_geode_python_binding)
         "SOURCES;DEPENDENCIES"
         ${ARGN}
     )
-    pybind11_add_module(${GEODE_BINDING_NAME} 
+    set(GEODE_BINDING_NEW_NAME ${PROJECT_NAME}_${GEODE_BINDING_NAME})
+    pybind11_add_module(${GEODE_BINDING_NEW_NAME}     
         SHARED "${GEODE_BINDING_SOURCES}"
     )
-    add_library(${PROJECT_NAME}::${GEODE_BINDING_NAME} ALIAS ${GEODE_BINDING_NAME})
-    target_link_libraries(${GEODE_BINDING_NAME} 
+    add_library(${PROJECT_NAME}::${GEODE_BINDING_NAME} ALIAS ${GEODE_BINDING_NEW_NAME})
+    target_link_libraries(${GEODE_BINDING_NEW_NAME} 
         PRIVATE "${GEODE_BINDING_DEPENDENCIES}"
     )
     string(TOLOWER ${PROJECT_NAME} project-name)
     string(REGEX REPLACE "-" "_" project_name ${project-name})
-    set_target_properties(${GEODE_BINDING_NAME}
+    set_target_properties(${GEODE_BINDING_NEW_NAME}
         PROPERTIES
             OUTPUT_NAME ${project_name}_${GEODE_BINDING_NAME}
             CXX_VISIBILITY_PRESET "default"
