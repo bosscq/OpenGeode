@@ -100,3 +100,9 @@ add_geode_library(
         spdlog::spdlog_header_only
         MINIZIP::minizip-ng
 )
+if(WIN32)
+    set_target_properties(${PROJECT_NAME}_basic
+        PROPERTIES
+            LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRTD"
+    )
+endif()
