@@ -210,7 +210,7 @@ function(add_geode_library)
         endif()
     endif()
     add_library(${PROJECT_NAME}::${GEODE_LIB_NAME} ALIAS ${GEODE_LIB_NEW_NAME})
-    add_dependencies(essential ${GEODE_LIB_NAME})
+    add_dependencies(essential ${GEODE_LIB_NEW_NAME})
     string(TOLOWER ${PROJECT_NAME} project-name)
     string(REGEX REPLACE "-" "_" project_name ${project-name})
     set_target_properties(${GEODE_LIB_NEW_NAME}
@@ -256,7 +256,7 @@ function(add_geode_library)
         PATTERN "*/private/*"
     )
     if(MSVC AND BUILD_SHARED_LIBS AND NOT ${GEODE_LIB_STATIC})
-        install(FILES $<TARGET_PDB_FILE:${GEODE_LIB_NAME}> 
+        install(FILES $<TARGET_PDB_FILE:${GEODE_LIB_NEW_NAME}> 
             DESTINATION bin 
             COMPONENT public
             OPTIONAL
